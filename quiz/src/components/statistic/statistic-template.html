@@ -1,0 +1,11 @@
+<ul class="statistic">
+    @for (let key of keys; track $index) {
+    <li>
+        <p>
+            <span class="statistic__text">{{statisticText[key]}}</span>
+            <span class="statistic__text">: </span>
+            <span class="statistic__item">{{state[key]}}</span>
+        </p>
+    </li>
+    }
+</ul>

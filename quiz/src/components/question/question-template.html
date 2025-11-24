@@ -1,0 +1,16 @@
+<section class="questions">
+    <p class="questions__text">{{question()}}</p>
+
+    <form (submit)="submitForm($event)">
+        <div class="questions__answers">
+            @for(let answer of options; track answer) {
+            <input id="{{$index}}" value="{{$index}}" name="questionanswers" type="radio" class="questions__input"
+                [checked]="selected() === $index" [disabled]="isTimeout()" />
+            <label for="{{$index}}" [className]="getAnswerClass($index)" (click)="select($index)">
+                {{answer}}
+            </label>
+            }
+        </div>
+        <button type="submit" class="control-button" [disabled]="isDisabled()">{{buttonText()}}</button>
+    </form>
+</section>

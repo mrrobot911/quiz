@@ -1,0 +1,10 @@
+dist-temp/
+.git/
+.gitignore
+*.db
+.env
+*.log
+.vscode/
+.idea/
+*.tmp
+*.swp

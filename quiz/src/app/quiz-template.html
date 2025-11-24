@@ -1,0 +1,13 @@
+<main class="wrapper">
+
+    <app-header></app-header>
+
+    @if(isActive()) {
+    <app-question></app-question>
+    } @else {
+    <app-start class="start"></app-start>
+    }
+
+    <app-toast></app-toast>
+
+</main>

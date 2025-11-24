@@ -1,0 +1,312 @@
+[
+    {
+        "text": "What does HTML stand for?",
+        "options": [
+            "Hyper Text Markup Language",
+            "High Tech Modern Language",
+            "Home Tool Markup Language",
+            "Hyperlink and Text Markup Language"
+        ],
+        "correct_answer": 0
+    },
+    {
+        "text": "Which CSS property is used to change the text color?",
+        "options": [
+            "font-color",
+            "text-color",
+            "color",
+            "foreground-color"
+        ],
+        "correct_answer": 2
+    },
+    {
+        "text": "What is the purpose of JavaScript?",
+        "options": [
+            "Style web pages",
+            "Structure web pages",
+            "Make web pages interactive",
+            "Optimize web pages"
+        ],
+        "correct_answer": 2
+    },
+    {
+        "text": "Which HTML tag is used to create a hyperlink?",
+        "options": [
+            "<link>",
+            "<a>",
+            "<href>",
+            "<url>"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "What does CSS stand for?",
+        "options": [
+            "Computer Style Sheets",
+            "Creative Style Sheets",
+            "Cascading Style Sheets",
+            "Colorful Style Sheets"
+        ],
+        "correct_answer": 2
+    },
+    {
+        "text": "Which JavaScript method is used to select an element by ID?",
+        "options": [
+            "getElementById()",
+            "querySelector()",
+            "getElementByClass()",
+            "getElementsByTagName()"
+        ],
+        "correct_answer": 0
+    },
+    {
+        "text": "What is the box model in CSS?",
+        "options": [
+            "A container for layout elements",
+            "A way to style text",
+            "A model for creating animations",
+            "A method for responsive design"
+        ],
+        "correct_answer": 0
+    },
+    {
+        "text": "Which HTML element is used for the largest heading?",
+        "options": [
+            "<h6>",
+            "<h1>",
+            "<header>",
+            "<head>"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "What does the 'var' keyword do in JavaScript?",
+        "options": [
+            "Creates a constant",
+            "Declares a variable",
+            "Defines a function",
+            "Imports a module"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "Which CSS property controls the layout of elements?",
+        "options": [
+            "display",
+            "visibility",
+            "opacity",
+            "transform"
+        ],
+        "correct_answer": 0
+    },
+    {
+        "text": "What is React?",
+        "options": [
+            "A database",
+            "A JavaScript library for building user interfaces",
+            "A CSS framework",
+            "A server-side language"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "Which HTML attribute specifies an alternate text for an image?",
+        "options": [
+            "title",
+            "alt",
+            "src",
+            "href"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "What is the purpose of the 'useState' hook in React?",
+        "options": [
+            "To handle side effects",
+            "To manage component state",
+            "To create context",
+            "To optimize performance"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "Which CSS unit is relative to the font-size of the element?",
+        "options": [
+            "px",
+            "em",
+            "rem",
+            "vh"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "What does DOM stand for?",
+        "options": [
+            "Document Object Model",
+            "Data Object Management",
+            "Dynamic Object Method",
+            "Document Oriented Markup"
+        ],
+        "correct_answer": 0
+    },
+    {
+        "text": "Which JavaScript array method adds elements to the end of an array?",
+        "options": [
+            "push()",
+            "pop()",
+            "shift()",
+            "unshift()"
+        ],
+        "correct_answer": 0
+    },
+    {
+        "text": "What is the purpose of media queries in CSS?",
+        "options": [
+            "To add animations",
+            "To create responsive designs",
+            "To define colors",
+            "To import fonts"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "Which HTML element is used to define a list item?",
+        "options": [
+            "<list>",
+            "<li>",
+            "<item>",
+            "<element>"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "What is TypeScript?",
+        "options": [
+            "A CSS preprocessor",
+            "A superset of JavaScript",
+            "A database query language",
+            "A testing framework"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "Which CSS property is used to create space between elements?",
+        "options": [
+            "padding",
+            "margin",
+            "border",
+            "spacing"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "What is the purpose of the 'async' keyword in JavaScript?",
+        "options": [
+            "To create loops",
+            "To define functions",
+            "To handle asynchronous operations",
+            "To declare variables"
+        ],
+        "correct_answer": 2
+    },
+    {
+        "text": "Which HTML element is used to create a form?",
+        "options": [
+            "<form>",
+            "<input>",
+            "<button>",
+            "<field>"
+        ],
+        "correct_answer": 0
+    },
+    {
+        "text": "What is Flexbox in CSS?",
+        "options": [
+            "A JavaScript library",
+            "A layout model for responsive design",
+            "A color scheme",
+            "An animation technique"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "Which JavaScript method is used to convert a string to an integer?",
+        "options": [
+            "parseInt()",
+            "toString()",
+            "split()",
+            "join()"
+        ],
+        "correct_answer": 0
+    },
+    {
+        "text": "What does the 'z-index' property control in CSS?",
+        "options": [
+            "Element width",
+            "Element stacking order",
+            "Element opacity",
+            "Element rotation"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "Which HTML element is used for emphasizing text?",
+        "options": [
+            "<strong>",
+            "<em>",
+            "<bold>",
+            "<italic>"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "What is the purpose of the 'map()' method in JavaScript?",
+        "options": [
+            "To filter arrays",
+            "To create new arrays by applying a function",
+            "To sort arrays",
+            "To reduce arrays to a single value"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "Which CSS property is used to change the font size?",
+        "options": [
+            "text-size",
+            "font-size",
+            "size",
+            "font-weight"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "What is Node.js?",
+        "options": [
+            "A CSS framework",
+            "A JavaScript runtime environment",
+            "A database",
+            "A testing tool"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "Which HTML attribute is used to specify a unique identifier?",
+        "options": [
+            "name",
+            "id",
+            "class",
+            "value"
+        ],
+        "correct_answer": 1
+    },
+    {
+        "text": "What is the purpose of the 'preventDefault()' method in JavaScript?",
+        "options": [
+            "To stop event propagation",
+            "To prevent the default action of an event",
+            "To add event listeners",
+            "To remove event listeners"
+        ],
+        "correct_answer": 1
+    }
+]

@@ -1,0 +1,7 @@
+@if(toasts().length > 0) {
+<div class="toast">
+    @for(let toast of toasts; track toast.id ) {
+    <p class="toast__container toast__container--{{toast.type}}">{{toast.message}}</p>
+    }
+</div>
+}

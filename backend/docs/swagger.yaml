@@ -1,0 +1,170 @@
+basePath: /api/v1
+definitions:
+  models.AnswerRequest:
+    properties:
+      answer:
+        type: integer
+      time_taken:
+        description: in seconds
+        type: integer
+    type: object
+  models.AnswerResponse:
+    properties:
+      completed:
+        type: boolean
+      correct:
+        type: boolean
+      current_index:
+        type: integer
+      message:
+        type: string
+      next_question:
+        $ref: '#/definitions/models.QuestionDTO'
+      reason:
+        description: '"timeout", "wrong_answer", "correct"'
+        type: string
+      total_correct:
+        type: integer
+      total_incorrect:
+        type: integer
+    type: object
+  models.QuestionDTO:
+    properties:
+      id:
+        type: integer
+      options:
+        items:
+          type: string
+        type: array
+      text:
+        type: string
+      time_limit:
+        type: integer
+    type: object
+  models.QuestionsDTO:
+    properties:
+      page:
+        type: integer
+      questions:
+        items:
+          $ref: '#/definitions/models.QuestionDTO'
+        type: array
+      total_count:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+host: localhost:5000
+info:
+  contact: {}
+  description: Clean Architecture Quiz Backend
+  title: Quiz API
+  version: "1.0"
+paths:
+  /questions:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Search in text
+        in: query
+        name: search
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.QuestionsDTO'
+      summary: List questions with pagination and search
+      tags:
+      - questions
+  /questions/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Question ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.QuestionDTO'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get single question by ID
+      tags:
+      - questions
+  /quiz/answer:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Answer data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.AnswerRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AnswerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Submit answer for current question
+      tags:
+      - quiz
+  /quiz/start:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AnswerResponse'
+      summary: Start or resume quiz session
+      tags:
+      - quiz
+swagger: "2.0"
