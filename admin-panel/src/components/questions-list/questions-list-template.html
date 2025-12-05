@@ -1,0 +1,35 @@
+<table class="table">
+    <thead class="table__header">
+        <tr class="table__row">
+            <th class="table__header-cell">№</th>
+            <th class="table__header-cell">Question text</th>
+            <th class="table__header-cell">Answer variants</th>
+            <th class="table__header-cell">Correct answer</th>
+            <th class="table__header-cell">Controls</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for(let question of questions; track question.id) {
+        <tr class="table__row">
+            <td class="table__cell">{{getIndex($index)}}</td>
+            <td class="table__cell">{{question.text}}</td>
+            <td class="table__cell">
+                <ul class="table__list">
+                    @for(let option of question.options; track $index) {
+                    <li class="table__list-item">{{option}}</li>
+                    }
+                </ul>
+            </td>
+            <td class="table__cell">{{question.answer.text}}</td>
+            <td class="table__cell">
+                <div class="table__controls">
+                    <button class="table__button table__button--edit" type="button"
+                        (click)="edit(question.id)">Edit</button>
+                    <button class="table__button table__button--delete" type="button"
+                        (click)="delete(question.id)">Delete</button>
+                </div>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

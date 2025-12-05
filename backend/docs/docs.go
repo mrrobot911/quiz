@@ -53,7 +53,47 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.QuestionsDTO"
+                            "$ref": "#/definitions/models.AdminPanelQuestionsDTO"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "questions"
+                ],
+                "summary": "Create a new question",
+                "parameters": [
+                    {
+                        "description": "Question data",
+                        "name": "question",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.QuestionDataDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.AdminPanelQuestionDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -84,7 +124,110 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.QuestionDTO"
+                            "$ref": "#/definitions/models.AdminPanelQuestionDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "questions"
+                ],
+                "summary": "Update question by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Question ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Question data",
+                        "name": "question",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.QuestionDataDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.AdminPanelQuestionDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "questions"
+                ],
+                "summary": "Delete single question by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Question ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.AdminPanelQuestionDTO"
                         }
                     },
                     "400": {
@@ -159,6 +302,34 @@ const docTemplate = `{
                 }
             }
         },
+        "/quiz/check-session": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "quiz"
+                ],
+                "summary": "Check if already have a session",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.SessionStats"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/quiz/start": {
             "get": {
                 "produces": [
@@ -172,7 +343,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.AnswerResponse"
+                            "$ref": "#/definitions/models.StartResponse"
                         }
                     }
                 }
@@ -180,14 +351,56 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.AdminPanelQuestionDTO": {
+            "type": "object",
+            "properties": {
+                "correct_answer": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "options": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.AdminPanelQuestionsDTO": {
+            "type": "object",
+            "properties": {
+                "page": {
+                    "type": "integer"
+                },
+                "questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.AdminPanelQuestionDTO"
+                    }
+                },
+                "total_count": {
+                    "type": "integer"
+                },
+                "total_pages": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.AnswerRequest": {
             "type": "object",
             "properties": {
                 "answer": {
                     "type": "integer"
                 },
-                "time_taken": {
-                    "description": "in seconds",
+                "question_id": {
+                    "type": "integer"
+                },
+                "question_idx": {
                     "type": "integer"
                 }
             }
@@ -195,17 +408,17 @@ const docTemplate = `{
         "models.AnswerResponse": {
             "type": "object",
             "properties": {
-                "completed": {
-                    "type": "boolean"
-                },
                 "correct": {
                     "type": "boolean"
+                },
+                "correct_answer_idx": {
+                    "type": "integer"
                 },
                 "current_index": {
                     "type": "integer"
                 },
-                "message": {
-                    "type": "string"
+                "has_active_game": {
+                    "type": "boolean"
                 },
                 "next_question": {
                     "$ref": "#/definitions/models.QuestionDTO"
@@ -242,22 +455,56 @@ const docTemplate = `{
                 }
             }
         },
-        "models.QuestionsDTO": {
+        "models.QuestionDataDTO": {
             "type": "object",
             "properties": {
-                "page": {
+                "correct_answer": {
                     "type": "integer"
                 },
-                "questions": {
+                "options": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.QuestionDTO"
+                        "type": "string"
                     }
                 },
-                "total_count": {
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.SessionStats": {
+            "type": "object",
+            "properties": {
+                "current_index": {
                     "type": "integer"
                 },
-                "total_pages": {
+                "has_active_game": {
+                    "type": "boolean"
+                },
+                "total_correct": {
+                    "type": "integer"
+                },
+                "total_incorrect": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.StartResponse": {
+            "type": "object",
+            "properties": {
+                "current_index": {
+                    "type": "integer"
+                },
+                "has_active_game": {
+                    "type": "boolean"
+                },
+                "next_question": {
+                    "$ref": "#/definitions/models.QuestionDTO"
+                },
+                "total_correct": {
+                    "type": "integer"
+                },
+                "total_incorrect": {
                     "type": "integer"
                 }
             }

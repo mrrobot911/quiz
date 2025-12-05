@@ -45,7 +45,7 @@ func (s *QuizService) ProcessAnswer(session *models.UserSession, answer int) (mo
 
 	correct := false
 
-	if timedOut == true {
+	if timedOut {
 		reason = "timeout"
 	} else {
 		if answer == q.CorrectAnswer {

@@ -4,25 +4,34 @@ import (
 	"quiz_backend/models"
 )
 
+func ToAdminPanelQuestionDTO(q *models.Question) models.AdminPanelQuestionDTO {
+	return models.AdminPanelQuestionDTO{
+		ID:            q.ID,
+		Text:          q.Text,
+		Options:       q.Options,
+		CorrectAnswer: q.CorrectAnswer,
+	}
+}
+
+func ToAdminPanelQuestionsDTO(questions []models.Question, total, pages int64, page int) models.AdminPanelQuestionsDTO {
+	dtos := make([]models.AdminPanelQuestionDTO, len(questions))
+	for i := range questions {
+		dtos[i] = ToAdminPanelQuestionDTO(&questions[i])
+	}
+	return models.AdminPanelQuestionsDTO{
+		Questions: dtos,
+		Total:     total,
+		Pages:     pages,
+		Page:      page,
+	}
+}
+
 func ToQuestionDTO(q *models.Question) models.QuestionDTO {
 	return models.QuestionDTO{
 		ID:        q.ID,
 		Text:      q.Text,
 		Options:   q.Options,
 		TimeLimit: models.QuestionTimeLimit,
-	}
-}
-
-func ToQuestionsDTO(questions []models.Question, total, pages int64, page int) models.QuestionsDTO {
-	dtos := make([]models.QuestionDTO, len(questions))
-	for i := range questions {
-		dtos[i] = ToQuestionDTO(&questions[i])
-	}
-	return models.QuestionsDTO{
-		Questions: dtos,
-		Total:     total,
-		Pages:     pages,
-		Page:      page,
 	}
 }
 

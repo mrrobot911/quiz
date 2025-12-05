@@ -5,18 +5,17 @@ import { ToastComponent } from "./components/toast/toast-component";
 import { QuestionComponent } from "./components/question/question-component";
 import { TimerComponent } from "./components/timer/timer-component";
 import { StatisticComponent } from "./components/statistic/statistic-component";
-import { NgModule } from "@angular";
+import { NgModule } from "angular";
 
 @NgModule({
-    declarations: [
-        QuizComponent,
-        HeaderComponent,
-        StartComponent,
-        ToastComponent,
-        QuestionComponent,
-        TimerComponent,
-        StatisticComponent
-    ],
-    bootstrap: [QuizComponent],
+  declarations: [
+    HeaderComponent,
+    StartComponent,
+    ToastComponent,
+    QuestionComponent,
+    TimerComponent,
+    StatisticComponent,
+  ],
+  bootstrap: [QuizComponent],
 })
-export class AppModule { }
+export class AppModule {}

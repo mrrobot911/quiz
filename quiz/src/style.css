@@ -7,10 +7,12 @@
     --color-success: oklch(0.761 0.106 156.72);
     --color-error: oklch(0.668 0.157 22.248);
     --color-info: oklch(0.58 0.18 259.81);
+
     --color-background-primary: oklch(0.95 0.02 81.42);
     --color-background-secondary: oklch(0.93 0.01 240);
     --color-background-content: oklch(36.866% 0.00135 15.515 / 0.05);
     --shadow-default: 0 0.2em 0.75em oklch(0.321 0 0 / 20%);
+
     --transition-default: all ease-in-out 0.3s;
     --transition-toast: opacity 0.3s ease;
 }
@@ -225,7 +227,7 @@ li {
     }
 
     @media (hover: hover) {
-        .control-button:hover:not([disabled]) {
+        &:hover:not([disabled]) {
             background-color: var(--color-orange-secondary);
             color: var(--color-black);
             transform: translate(0.1em, -0.2em);

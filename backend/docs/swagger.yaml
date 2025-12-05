@@ -1,23 +1,50 @@
 basePath: /api/v1
 definitions:
+  models.AdminPanelQuestionDTO:
+    properties:
+      correct_answer:
+        type: integer
+      id:
+        type: integer
+      options:
+        items:
+          type: string
+        type: array
+      text:
+        type: string
+    type: object
+  models.AdminPanelQuestionsDTO:
+    properties:
+      page:
+        type: integer
+      questions:
+        items:
+          $ref: '#/definitions/models.AdminPanelQuestionDTO'
+        type: array
+      total_count:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
   models.AnswerRequest:
     properties:
       answer:
         type: integer
-      time_taken:
-        description: in seconds
+      question_id:
+        type: integer
+      question_idx:
         type: integer
     type: object
   models.AnswerResponse:
     properties:
-      completed:
-        type: boolean
       correct:
         type: boolean
+      correct_answer_idx:
+        type: integer
       current_index:
         type: integer
-      message:
-        type: string
+      has_active_game:
+        type: boolean
       next_question:
         $ref: '#/definitions/models.QuestionDTO'
       reason:
@@ -41,17 +68,39 @@ definitions:
       time_limit:
         type: integer
     type: object
-  models.QuestionsDTO:
+  models.QuestionDataDTO:
     properties:
-      page:
+      correct_answer:
         type: integer
-      questions:
+      options:
         items:
-          $ref: '#/definitions/models.QuestionDTO'
+          type: string
         type: array
-      total_count:
+      text:
+        type: string
+    type: object
+  models.SessionStats:
+    properties:
+      current_index:
         type: integer
-      total_pages:
+      has_active_game:
+        type: boolean
+      total_correct:
+        type: integer
+      total_incorrect:
+        type: integer
+    type: object
+  models.StartResponse:
+    properties:
+      current_index:
+        type: integer
+      has_active_game:
+        type: boolean
+      next_question:
+        $ref: '#/definitions/models.QuestionDTO'
+      total_correct:
+        type: integer
+      total_incorrect:
         type: integer
     type: object
 host: localhost:5000
@@ -86,11 +135,68 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.QuestionsDTO'
+            $ref: '#/definitions/models.AdminPanelQuestionsDTO'
       summary: List questions with pagination and search
       tags:
       - questions
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Question data
+        in: body
+        name: question
+        required: true
+        schema:
+          $ref: '#/definitions/models.QuestionDataDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AdminPanelQuestionDTO'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new question
+      tags:
+      - questions
   /questions/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Question ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AdminPanelQuestionDTO'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete single question by ID
+      tags:
+      - questions
     get:
       consumes:
       - application/json
@@ -106,7 +212,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.QuestionDTO'
+            $ref: '#/definitions/models.AdminPanelQuestionDTO'
         "400":
           description: Bad Request
           schema:
@@ -120,6 +226,43 @@ paths:
               type: string
             type: object
       summary: Get single question by ID
+      tags:
+      - questions
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Question ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Question data
+        in: body
+        name: question
+        required: true
+        schema:
+          $ref: '#/definitions/models.QuestionDataDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AdminPanelQuestionDTO'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update question by ID
       tags:
       - questions
   /quiz/answer:
@@ -155,6 +298,24 @@ paths:
       summary: Submit answer for current question
       tags:
       - quiz
+  /quiz/check-session:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SessionStats'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Check if already have a session
+      tags:
+      - quiz
   /quiz/start:
     get:
       produces:
@@ -163,7 +324,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.AnswerResponse'
+            $ref: '#/definitions/models.StartResponse'
       summary: Start or resume quiz session
       tags:
       - quiz

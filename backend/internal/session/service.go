@@ -1,16 +1,19 @@
 package session
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"net/http"
 	"quiz_backend/models"
+	"time"
 )
 
 type SessionRepository interface {
-	CreateSession() (*models.UserSession, error)
+	CreateSession(session *models.UserSession) error
 	GetActiveSessionByToken(token string) (*models.UserSession, error)
 	GetSessionByToken(token string) (*models.UserSession, error)
 	UpdateSession(s *models.UserSession) error
-	GetQuestionById(id uint) (*models.Question, error)
+	GetRandomQuestions(n int) ([]models.Question, error)
 }
 
 type Service struct {
@@ -41,7 +44,22 @@ func (s *Service) GetSession(r *http.Request) (*models.UserSession, error) {
 }
 
 func (s *Service) createNewSession(w http.ResponseWriter) (*models.UserSession, error) {
-	session, err := s.repo.CreateSession()
+	token := generateSessionToken()
+	questions, err := s.repo.GetRandomQuestions(10)
+	if err != nil {
+		return nil, err
+	}
+	var qids []uint
+	for _, q := range questions {
+		qids = append(qids, q.ID)
+	}
+	session := &models.UserSession{
+		SessionToken: token,
+		StartTime:    time.Now(),
+		Questions:    qids,
+		CurrentIndex: 0,
+	}
+	err = s.repo.CreateSession(session)
 	if err != nil {
 		return nil, err
 	}
@@ -72,4 +90,10 @@ func (s *Service) clearSessionCookie(w http.ResponseWriter) {
 		SameSite: http.SameSiteNoneMode,
 		Secure:   true,
 	})
+}
+
+func generateSessionToken() string {
+	b := make([]byte, 32)
+	rand.Read(b)
+	return hex.EncodeToString(b)
 }

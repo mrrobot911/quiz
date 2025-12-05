@@ -1,0 +1,5 @@
+<button class="pagination__button" (click)="prev" [disabled]="page() <= 1">Prev</button>
+<p class="pagination__info">
+    Page {{page}} of {{pages}}
+</p>
+<button class="pagination__button" (click)="next" [disabled]="isNextDisabled">Next</button>

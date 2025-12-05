@@ -15,6 +15,10 @@ func OK[T any](w http.ResponseWriter, data T) {
 	JsonResp(w, data, http.StatusOK)
 }
 
+func Created[T any](w http.ResponseWriter, data T) {
+	JsonResp(w, data, http.StatusCreated)
+}
+
 func BadRequest(w http.ResponseWriter, msg string) {
 	JsonResp(w, map[string]string{"error": msg}, http.StatusBadRequest)
 }

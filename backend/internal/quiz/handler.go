@@ -32,6 +32,9 @@ func NewQuizHandler(mux *http.ServeMux, deps QuizHandlerDeps) {
 	// Questions
 	mux.HandleFunc("GET /api/v1/questions", h.GetAllQuestions())
 	mux.HandleFunc("GET /api/v1/questions/{id}", h.GetQuestion())
+	mux.HandleFunc("POST /api/v1/questions", h.CreateQuestion())
+	mux.HandleFunc("PUT /api/v1/questions/{id}", h.UpdateQuestion())
+	mux.HandleFunc("DELETE /api/v1/questions/{id}", h.DeleteQuestion())
 
 	// Quiz
 	mux.HandleFunc("GET /api/v1/quiz/check-session", h.CheckSession())
@@ -47,7 +50,7 @@ func NewQuizHandler(mux *http.ServeMux, deps QuizHandlerDeps) {
 // @Param        search  query  string  false  "Search in text"
 // @Param        page     query  int     false  "Page number"     default(1)
 // @Param        limit    query  int     false  "Items per page"  default(10)
-// @Success      200 {object} models.QuestionsDTO
+// @Success      200 {object} models.AdminPanelQuestionsDTO
 // @Router       /questions [get]
 func (h *QuizHandler) GetAllQuestions() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -72,7 +75,7 @@ func (h *QuizHandler) GetAllQuestions() http.HandlerFunc {
 			return
 		}
 
-		dto := response.ToQuestionsDTO(questions, total, pages, currentPage)
+		dto := response.ToAdminPanelQuestionsDTO(questions, total, pages, currentPage)
 		response.OK(w, dto)
 	}
 }
@@ -83,7 +86,7 @@ func (h *QuizHandler) GetAllQuestions() http.HandlerFunc {
 // @Accept       json
 // @Produce      json
 // @Param        id   path   int   true   "Question ID"
-// @Success      200 {object} models.QuestionDTO
+// @Success      200 {object} models.AdminPanelQuestionDTO
 // @Failure      400 {object} map[string]string
 // @Failure      404 {object} map[string]string
 // @Router       /questions/{id} [get]
@@ -102,7 +105,134 @@ func (h *QuizHandler) GetQuestion() http.HandlerFunc {
 			return
 		}
 
-		dto := response.ToQuestionDTO(q)
+		dto := response.ToAdminPanelQuestionDTO(q)
+		response.OK(w, dto)
+	}
+}
+
+// CreateQuestion godoc
+// @Summary      Create a new question
+// @Tags         questions
+// @Accept       json
+// @Produce      json
+// @Param        question  body  models.QuestionDataDTO  true  "Question data"
+// @Success      200 {object} models.AdminPanelQuestionDTO
+// @Failure      400 {object} map[string]string
+// @Router       /questions [post]
+func (h *QuizHandler) CreateQuestion() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req models.QuestionDataDTO
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			response.BadRequest(w, "Invalid JSON")
+			return
+		}
+
+		if req.Text == "" {
+			response.BadRequest(w, "Text is required")
+			return
+		}
+		if len(req.Options) < 2 {
+			response.BadRequest(w, "At least 2 options are required")
+			return
+		}
+		if req.CorrectAnswer < 0 || req.CorrectAnswer >= len(req.Options) {
+			response.BadRequest(w, "Correct answer index is invalid")
+			return
+		}
+
+		question := &models.Question{
+			Text:          req.Text,
+			Options:       req.Options,
+			CorrectAnswer: req.CorrectAnswer,
+		}
+
+		q, err := h.repo.CreateQuestion(question)
+		if err != nil {
+			response.InternalError(w, "Can't create question")
+			return
+		}
+		dto := response.ToAdminPanelQuestionDTO(q)
+		response.Created(w, dto)
+	}
+}
+
+// UpdateQuestion godoc
+// @Summary      Update question by ID
+// @Tags         questions
+// @Accept       json
+// @Produce      json
+// @Param        id        path  int             true  "Question ID"
+// @Param        question  body  models.QuestionDataDTO  true  "Question data"
+// @Success      200 {object} models.AdminPanelQuestionDTO
+// @Failure      400 {object} map[string]string
+// @Failure      404 {object} map[string]string
+// @Router       /questions/{id} [put]
+func (h *QuizHandler) UpdateQuestion() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		idStr := r.PathValue("id")
+		id, err := strconv.ParseUint(idStr, 10, 32)
+		if err != nil {
+			response.BadRequest(w, "Invalid ID")
+			return
+		}
+
+		var req models.QuestionDataDTO
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			response.BadRequest(w, "Invalid JSON")
+			return
+		}
+
+		if req.Text == "" && req.Options == nil && req.CorrectAnswer < 0 {
+			response.BadRequest(w, "No data provided for update")
+			return
+		}
+		if len(req.Options) < 2 {
+			response.BadRequest(w, "Question must have at least 2 options")
+			return
+		}
+
+		updateData := &models.Question{
+			Text:          req.Text,
+			Options:       req.Options,
+			CorrectAnswer: req.CorrectAnswer,
+		}
+
+		q, err := h.repo.UpdateQuestion(uint(id), updateData)
+		if err != nil {
+			response.InternalError(w, "Can't update question")
+			return
+		}
+		dto := response.ToAdminPanelQuestionDTO(q)
+		response.Created(w, dto)
+	}
+}
+
+// GetQuestion godoc
+// @Summary      Delete single question by ID
+// @Tags         questions
+// @Accept       json
+// @Produce      json
+// @Param        id   path   int   true   "Question ID"
+// @Success      200 {object} models.AdminPanelQuestionDTO
+// @Failure      400 {object} map[string]string
+// @Failure      404 {object} map[string]string
+// @Router       /questions/{id} [delete]
+func (h *QuizHandler) DeleteQuestion() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		idStr := r.PathValue("id")
+		id, err := strconv.ParseUint(idStr, 10, 32)
+		if err != nil {
+			response.BadRequest(w, "Invalid ID")
+			return
+		}
+
+		q, err := h.repo.DeleteQuestion(uint(id))
+		if err != nil {
+			response.InternalError(w, "Question not found")
+			return
+		}
+
+		dto := response.ToAdminPanelQuestionDTO(q)
 		response.OK(w, dto)
 	}
 }
@@ -113,7 +243,7 @@ func (h *QuizHandler) GetQuestion() http.HandlerFunc {
 // @Produce      json
 // @Success      200 {object} models.SessionStats
 // @Failure      404 {object} map[string]string
-// @Router       /quiz/check-session" [get]
+// @Router       /quiz/check-session [get]
 func (h *QuizHandler) CheckSession() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		session, err := h.sess.GetOrCreateSession(w, r)

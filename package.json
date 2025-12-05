@@ -1,0 +1,17 @@
+{
+  "name": "lab4",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "admin-panel",
+    "quiz"
+  ],
+  "description": "A full-featured web application for taking quizzes with a Go backend and TypeScript frontend.",
+  "scripts": {
+    "dev:admin": "npm run dev --workspace=admin-panel",
+    "dev:quiz": "npm run dev --workspace=quiz"
+  },
+  "keywords": [],
+  "author": "KelWin",
+  "license": "ISC"
+}

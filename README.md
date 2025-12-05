@@ -1,10 +1,10 @@
-# Quiz App
+# Quiz and Admin Panel Apps
 
-A full-featured web application for taking quizzes with a Go backend and vanilla JavaScript frontend.
+A full-featured web application suite including a quiz app for taking quizzes and an admin panel for managing quiz questions, with a Go backend and TypeScript frontend.
 
 ## 🚀 Quick Start
 
-### Running with Docker (Recommended)
+### Running with Docker
 
 **1. Install Docker Desktop**
 
@@ -25,16 +25,21 @@ Run the container:
 
 docker run -p 5000:5000 quiz-backend
 ```
-**3. Start the Frontend**
 
-Navigate to the project quiz directory install dependencies and start server:
+**3. Start the Frontends**
+
+From the root directory, install dependencies for all workspaces:
 ```bash
-
-cd quiz
-npm i
-npm run dev
+npm install
 ```
-Then open in your browser: http://localhost:5173
+
+### Commands to Run Frontends
+
+From the root directory, run the frontends:
+```bash
+npm run dev:quiz    # Start quiz frontend
+npm run dev:admin   # Start admin panel frontend
+```
 
 **4. Verify the Application**
 
@@ -42,39 +47,72 @@ Then open in your browser: http://localhost:5173
 
     Swagger UI: http://localhost:5000/swagger/
 
-    Frontend: http://localhost:5173
+    Quiz Frontend: http://localhost:5173
 
-### Alternative: Manual Setup
+    Admin Panel Frontend: http://localhost:5174
 
-**1.Start the Backend Server**
-Go to the backend directory and run one of the pre-built server executables:
+### Frontend Development
+
+#### Quiz Frontend
+
+Navigate to the quiz directory:
 ```bash
-
-cd backend
-cp dist-temp/server-{your-os} ./server
-./server
+cd quiz
 ```
 
-Note: Copy the server executable one directory up for proper path resolution. Choose the appropriate executable for your operating system (server-linux, server-windows.exe, server-macos).
-
-**2. Start the Frontend**
-
-Navigate to the project quiz directory install dependencies and start server:
+Install dependencies (if not done from root):
 ```bash
+npm install
+```
 
-cd quiz
-npm i
+Start development server:
+```bash
 npm run dev
 ```
-Then open in your browser: http://localhost:5173
+
+Linting and formatting:
+```bash
+npm run lint       # Check linting
+npm run lint:fix   # Auto-fix linting issues
+npm run format     # Format code
+```
+
+#### Admin Panel Frontend
+
+Navigate to the admin-panel directory:
+```bash
+cd admin-panel
+```
+
+Install dependencies (if not done from root):
+```bash
+npm install
+```
+
+Start development server:
+```bash
+npm run dev
+```
+
+Linting and formatting:
+```bash
+npm run lint       # Check linting
+npm run lint:fix   # Auto-fix linting issues
+npm run format     # Format code
+```
 
 ## 📋 Overview
 
-Quiz App is a full-featured web application for creating and taking quizzes. The project consists of:
+This project suite includes two applications for quiz management:
+
+- **Quiz App**: A full-featured web application for taking quizzes
+- **Admin Panel**: A web interface for managing quiz questions and content
+
+The project consists of:
 
 - **Backend**: REST API built with Go and SQLite database
-- **Frontend**: Modular vanilla JavaScript application with component architecture
-- **Features**: Timer, statistics, validation, notifications
+- **Frontend**: Modular TypeScript applications with component architecture
+- **Features**: Timer, statistics, validation, notifications, admin panel for content management
 
 ## 📁 Project Structure
 
@@ -156,8 +194,48 @@ Quiz App is a full-featured web application for creating and taking quizzes. The
 │   │   ├──  constants.ts
 │   │   └──  types.ts
 │   ├──  main.ts
-│   ├──  normalize.css
+│   ├──  app-module.ts
 │   └──  style.css
+├──  normalize.css
+├──  favicon.png
+├──  index.html
+├──  package-lock.json
+├──  package.json
+├──  tsconfig.json
+└──  vite.config.js
+```
+```
+ admin-panel
+├── 󰣞 src
+│   ├──  app
+│   │   ├──  admin-component.ts
+│   │   ├──  admin-service.ts
+│   │   └──  admin-template.html
+│   ├──  components
+│   │   ├──  header
+│   │   │   ├──  header-component.ts
+│   │   │   └──  header-template.html
+│   │   ├──  modal
+│   │   │   ├──  modal-component.ts
+│   │   │   ├──  modal-service.ts
+│   │   │   └──  modal-template.html
+│   │   ├──  pagination
+│   │   │   ├──  pagination-component.ts
+│   │   │   └──  pagination-template.html
+│   │   └──  questions-list
+│   │       ├──  questions-list-component.ts
+│   │       └──  questions-list-template.html
+│   ├──  services
+│   │   ├──  api-service.ts
+│   │   ├──  http-service.ts
+│   │   └──  validator-service.ts
+│   ├──  shared
+│   │   ├──  constants.ts
+│   │   └──  types.ts
+│   ├──  main.ts
+│   ├──  app-module.ts
+│   └──  style.css
+├──  normalize.css
 ├──  favicon.png
 ├──  index.html
 ├──  package-lock.json
@@ -230,13 +308,19 @@ chmod +x dist/server
 
 ## 🎯 Features
 
-### Frontend
+### Quiz Frontend
 - **Modular architecture** with components, services, and directives
 - **Timer** with countdown functionality
 - **Statistics** for quiz results
 - **Answer validation**
 - **Notifications** (toast)
 - **Highlighting** of correct/incorrect answers
+
+### Admin Panel Frontend
+- **Question Management Interface**: Add, edit, and delete quiz questions
+- **Pagination**: Efficient navigation through question lists
+- **Modal Dialogs**: Clean UI for content management
+- **Real-time Updates**: Immediate reflection of changes
 
 ### Backend
 - **REST API** for quiz management

@@ -1,0 +1,26 @@
+<div class="dialog__wrapper" (click)="close"></div>
+<dialog class="dialog" [open]="isModalOpen" aria-modal="true" role="dialog">
+    <button class="dialog__close" type="button" (click)="close" aria-label="close dialog">X</button>
+    <form class="dialog__form" (submit)="submitForm($event)">
+        <h3 class="dialog__id">{{editQuestionId}}</h3>
+
+        <label class="dialog__label" for="question-text"> Question </label>
+        <textarea class="dialog__textarea" id="question-text" name="text"
+            (change)="changeQuestion">{{editQuestionText()}}</textarea>
+
+        @for(let answer of editQuestionOptions; track $index) {
+        <label class="dialog__label" for="{{$index}}"> Answer № {{getNumber($index)}} </label>
+        <input class="dialog__input" id="{{$index}}" (change)="changeAnswer" value="{{answer}}" name="option"
+            type="text" />
+        }
+
+        <label class="dialog__label" for="question-answer"> Correct answer </label>
+        <select class="dialog__select" id="question-answer" name="answer" (change)="selectAnswer">
+            @for(let answer of editQuestionOptions; track $index) {
+            <option class="dialog__option" value="{{answer}}" [selected]="checkSelected($index)">{{answer}}</option>
+            }
+        </select>
+
+        <button class="dialog__submit" type="submit">Accept changes</button>
+    </form>
+</dialog>

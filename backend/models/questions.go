@@ -20,18 +20,31 @@ type Question struct {
 	CorrectAnswer int      `json:"correct_answer"`
 }
 
+type QuestionDataDTO struct {
+	Text          string   `json:"text"`
+	Options       []string `json:"options" gorm:"serializer:json"`
+	CorrectAnswer int      `json:"correct_answer"`
+}
+
+type AdminPanelQuestionDTO struct {
+	ID            uint     `json:"id"`
+	Text          string   `json:"text"`
+	Options       []string `json:"options"`
+	CorrectAnswer int      `json:"correct_answer"`
+}
+
+type AdminPanelQuestionsDTO struct {
+	Questions []AdminPanelQuestionDTO `json:"questions"`
+	Pages     int64                   `json:"total_pages"`
+	Total     int64                   `json:"total_count"`
+	Page      int                     `json:"page"`
+}
+
 type QuestionDTO struct {
 	ID        uint     `json:"id"`
 	Text      string   `json:"text"`
 	Options   []string `json:"options"`
 	TimeLimit int      `json:"time_limit"`
-}
-
-type QuestionsDTO struct {
-	Questions []QuestionDTO `json:"questions"`
-	Pages     int64         `json:"total_pages"`
-	Total     int64         `json:"total_count"`
-	Page      int           `json:"page"`
 }
 
 type UserSession struct {

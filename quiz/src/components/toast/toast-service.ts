@@ -1,42 +1,61 @@
-import { Injectable, signal } from "@angular";
-import { MAX_MESSAGES, messageStatus, responseStatuses, TIMEOUT_DELAY } from "../../shared/constants.js";
+import { Injectable, signal } from "angular";
+import {
+  MAX_MESSAGES,
+  messageStatus,
+  responseStatuses,
+  TIMEOUT_DELAY,
+} from "../../shared/constants.js";
 
 interface IToast {
-    id: string,
-    message: string,
-    type: string,
+  id: string;
+  message: string;
+  type: string;
 }
 
-Injectable()
+Injectable();
 export class ToastService {
-    private timeouts = new Map();
-    toasts = signal<IToast[]>([]);
+  private timeouts = new Map();
+  toasts = signal<IToast[]>([]);
 
-    show(message: keyof typeof responseStatuses, type = messageStatus.info, duration = TIMEOUT_DELAY) {
-        const id = crypto.randomUUID();
-        const newType = message === "correct" ? messageStatus.success : type;
-        const newMessage = responseStatuses[message];
-        const toast = { id, message: newMessage, type: newType };
+  show(
+    message: keyof typeof responseStatuses,
+    type = messageStatus.info,
+    duration = TIMEOUT_DELAY,
+  ) {
+    const newType = message === "correct" ? messageStatus.success : type;
+    const newMessage = responseStatuses[message];
+    this.create(newMessage, newType, duration);
+  }
 
-        const newToasts = [...this.toasts(), toast].slice(-MAX_MESSAGES);
-        this.toasts.set(newToasts);
+  success(msg: string, dur?: number) {
+    this.create(msg, messageStatus.success, dur);
+  }
+  error(msg: string, dur?: number) {
+    this.create(msg, messageStatus.error, dur);
+  }
+  info(msg: string, dur?: number) {
+    this.create(msg, messageStatus.info, dur);
+  }
 
-        const timeout = setTimeout(() => {
-            this.remove(id);
-        }, duration);
+  private create(message: string, type = messageStatus.info, duration = TIMEOUT_DELAY) {
+    const id = crypto.randomUUID();
+    const toast = { id, message, type };
 
-        this.timeouts.set(id, timeout);
-    }
+    const newToasts = [...this.toasts(), toast].slice(-MAX_MESSAGES);
+    this.toasts.set(newToasts);
 
-    success(msg: keyof typeof responseStatuses, dur?: number) { this.show(msg, messageStatus.success, dur); }
-    error(msg: keyof typeof responseStatuses, dur?: number) { this.show(msg, messageStatus.error, dur); }
-    info(msg: keyof typeof responseStatuses, dur?: number) { this.show(msg, messageStatus.info, dur); }
+    const timeout = setTimeout(() => {
+      this.remove(id);
+    }, duration);
 
-    private remove(id: string) {
-        clearTimeout(this.timeouts.get(id));
-        this.timeouts.delete(id);
+    this.timeouts.set(id, timeout);
+  }
 
-        const newToasts = this.toasts().filter(t => t.id !== id);
-        this.toasts.set(newToasts);
-    }
+  private remove(id: string) {
+    clearTimeout(this.timeouts.get(id));
+    this.timeouts.delete(id);
+
+    const newToasts = this.toasts().filter((t) => t.id !== id);
+    this.toasts.set(newToasts);
+  }
 }

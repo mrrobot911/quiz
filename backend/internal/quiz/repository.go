@@ -1,12 +1,9 @@
 package quiz
 
 import (
-	"crypto/rand"
-	"encoding/hex"
 	mrand "math/rand"
 	"quiz_backend/models"
 	"quiz_backend/pkg/db"
-	"time"
 )
 
 type QuizRepository struct {
@@ -48,6 +45,42 @@ func (repo *QuizRepository) GetQuestionById(id uint) (*models.Question, error) {
 	return &q, nil
 }
 
+func (repo *QuizRepository) CreateQuestion(data *models.Question) (*models.Question, error) {
+	if err := repo.Database.DB.Create(data).Error; err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func (repo *QuizRepository) UpdateQuestion(id uint, data *models.Question) (*models.Question, error) {
+	var question models.Question
+	if err := repo.Database.DB.First(&question, id).Error; err != nil {
+		return nil, err
+	}
+
+	question.Text = data.Text
+	question.Options = data.Options
+	question.CorrectAnswer = data.CorrectAnswer
+
+	if err := repo.Database.DB.Save(&question).Error; err != nil {
+		return nil, err
+	}
+
+	return &question, nil
+}
+
+func (repo *QuizRepository) DeleteQuestion(id uint) (*models.Question, error) {
+	var q models.Question
+	if err := repo.Database.DB.First(&q, id).Error; err != nil {
+		return nil, err
+	}
+
+	if err := repo.Database.DB.Delete(&q).Error; err != nil {
+		return nil, err
+	}
+	return &q, nil
+}
+
 func (repo *QuizRepository) GetRandomQuestions(count int) ([]models.Question, error) {
 	var questions []models.Question
 	var total int64
@@ -67,28 +100,11 @@ func (repo *QuizRepository) GetRandomQuestions(count int) ([]models.Question, er
 	return questions, nil
 }
 
-func (repo *QuizRepository) CreateSession() (*models.UserSession, error) {
-	token := generateSessionToken()
-	questions, err := repo.GetRandomQuestions(10)
-	if err != nil {
-		return nil, err
-	}
-	var qids []uint
-	for _, q := range questions {
-		qids = append(qids, q.ID)
-	}
-
-	session := &models.UserSession{
-		SessionToken: token,
-		StartTime:    time.Now(),
-		Questions:    qids,
-		CurrentIndex: 0,
-	}
-
+func (repo *QuizRepository) CreateSession(session *models.UserSession) error {
 	if err := repo.Database.Create(session).Error; err != nil {
-		return nil, err
+		return err
 	}
-	return session, nil
+	return nil
 }
 
 func (repo *QuizRepository) GetSessionByToken(token string) (*models.UserSession, error) {
@@ -105,10 +121,4 @@ func (repo *QuizRepository) GetActiveSessionByToken(token string) (*models.UserS
 
 func (repo *QuizRepository) UpdateSession(s *models.UserSession) error {
 	return repo.Database.DB.Save(s).Error
-}
-
-func generateSessionToken() string {
-	b := make([]byte, 32)
-	rand.Read(b)
-	return hex.EncodeToString(b)
 }
